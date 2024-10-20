@@ -1,14 +1,20 @@
 {
   "validUIDs": [
     {
-      "uid": "SC0464A2CA9C1790",
-      "qrImage": "https://github.com/seedcard/nfcverificationtest/blob/main/qr-images/SC0464A2CA9C1790.png",
+      "uid": "0442157A4F1390",
+      "blockchairUrl": "https://blockchair.com/bitcoin/address/bc1qxjyjs76d9ltthursnkl82swjlg0vc70j7lz5jr"
+    },
+     {
+      "uid": "0471167A4F1390",
+      "blockchairUrl": "https://blockchair.com/bitcoin/address/bc1qxjyjs76d9ltthursnkl82swjlg0vc70j7lz5jr"
+    },
+     {
+      "uid": "0441167A4F1390",
       "blockchairUrl": "https://blockchair.com/bitcoin/address/bc1qxjyjs76d9ltthursnkl82swjlg0vc70j7lz5jr"
     },
     {
-      "uid": "1234567890",
-      "qrImage": "qr-images/1234567890.png",
-      "blockchairUrl": "https://blockchair.com/bitcoin/address/1234567890"
+      "uid": "0472167A4F1390",
+      "blockchairUrl": "https://blockchair.com/bitcoin/address/bc1qxjyjs76d9ltthursnkl82swjlg0vc70j7lz5jr"
     }
   ]
 }
