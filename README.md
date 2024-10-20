@@ -1,4 +1,4 @@
-Upgraded version of SEEDCARD verification - webapp that works with encoded NFC NTAG424 tags
+Upgraded version of SEEDCARD verification - a webapp that works with encoded NFC NTAG424 tags
 
 Each tag is encoded with: Redirect URL + query containing unique 14 digit UID
 
