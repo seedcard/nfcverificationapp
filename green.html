@@ -10,34 +10,19 @@
             margin: 0;
             padding: 0;
             height: 100vh; /* Full viewport height */
+            background: black; /* Black background */
             display: flex;
             justify-content: center;
-            align-items: center;
-            background-color: #000; /* Black background */
-            overflow: hidden; /* Prevent overflow */
-        }
-
-        .splash-container {
+            align-items: flex-end; /* Align content to the bottom of the viewport */
+            background-image: url('https://github.com/seedcard/nfcverificationtest/blob/main/images/SEEDCARD-verification-screen-3.png?raw=true'); /* Background from GitHub */
+            background-size: cover; /* Cover the entire screen */
+            background-position: center;
             position: relative;
-            display: flex;
-            flex-direction: column; /* Stack content vertically */
-            justify-content: flex-end; /* Align content to the bottom */
-            align-items: center;
-            text-align: center;
-            color: white; /* White text */
-            overflow-y: auto; /* Enable scrolling when necessary */
-            height: 100%; /* Full height of container */
-            padding-top: 50px; /* Add black padding above the background image */
-        }
-
-        .splash-image {
-            max-width: 120%; /* Increase the size of the background image */
-            height: auto;
-            margin-top: -150px; /* Adjust top margin */
+            overflow: hidden;
         }
 
         .link-button {
-            margin-top: 20px;
+            margin-bottom: 20px;
             padding: 15px 30px;
             background-color: #fff; /* White background */
             color: black; /* Button text color */
@@ -45,7 +30,8 @@
             border-radius: 5px;
             font-size: 1.2em;
             transition: background-color 0.3s;
-            border: 5px solid gold; /* Increase gold border to 5px */
+            border: 5px solid gold; /* 5px gold border */
+            z-index: 1; /* Ensure button appears on top of background */
         }
 
         .link-button:hover {
@@ -53,14 +39,15 @@
         }
 
         .info-box {
-            margin-top: 20px; /* Add spacing below the button */
+            margin-bottom: 50px; /* Spacing above the button */
             padding: 20px;
-            background-color: white; /* Change background to white */
-            color: black; /* Black text color */
+            background-color: white; /* White background */
+            color: black;
             border-radius: 5px;
-            border: 5px solid gold; /* Increase gold border to 5px */
-            max-width: 90%; /* Limit width */
+            border: 5px solid gold; /* 5px gold border */
+            max-width: 90%;
             text-align: center;
+            z-index: 1; /* Ensure info box appears on top of background */
         }
 
         .info-box img {
@@ -71,10 +58,6 @@
         }
 
         @media (max-width: 600px) {
-            .splash-image {
-                max-width: 90%;
-            }
-
             .link-button {
                 font-size: 1em;
                 padding: 10px 20px;
@@ -88,19 +71,15 @@
     </style>
 </head>
 <body>
-    <div class="splash-container">
-        <!-- Splash Image -->
-        <img src="https://i.ibb.co/G5Y61zM/SEEDCARD-verification-screen-3.png" alt="SEEDCARD-verification-screen-3" class="splash-image">
 
-        <!-- Button to Blockchair (linked dynamically) -->
-        <a href="#" class="link-button" id="blockchair-btn">View on Blockchair</a>
+    <!-- Button to Blockchair (linked dynamically) -->
+    <a href="#" class="link-button" id="blockchair-btn">View on Blockchair</a>
 
-        <!-- Info Box (UID and QR code) -->
-        <div class="info-box" id="info-box">
-            <p>UID: <span id="uid-box">Loading...</span></p>
-            <p>QR Code:</p>
-            <img id="qr-box" src="" alt="QR Code">
-        </div>
+    <!-- Info Box (UID and QR code) -->
+    <div class="info-box" id="info-box">
+        <p>UID: <span id="uid-box">Loading...</span></p>
+        <p>QR Code:</p>
+        <img id="qr-box" src="" alt="QR Code">
     </div>
 
     <script>
