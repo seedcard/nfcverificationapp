@@ -51,28 +51,42 @@
             margin-top: 5px; /* Add some space between the label and the number */
         }
 
+        /* Blockchair button box styling */
+        .box-button {
+            background-color: white; /* White background for the box */
+            border-radius: 5px;
+            padding: 20px; /* Add padding around the button */
+            display: flex; /* Use flexbox to center the button */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            width: 35%; /* Same width as other boxes */
+            max-width: 400px; /* Optional max width for larger screens */
+            margin-bottom: 30px; /* Space between the boxes */
+            min-height: 100px;
+        }
+
         /* Blockchair button styling */
         .link-button {
-            padding: 10px 20px; /* Adjust padding to allow text to fit in one line */
-            background-color: #ffcc00; /* Gold center for the button */
+            padding: 15px 30px;
+            background-color: #ffcc00; /* Gold color for the button */
             color: black; /* Text color */
             text-decoration: none;
             border-radius: 5px;
-            font-size: 1.1em; /* Slightly smaller font to fit on one line */
+            font-size: 1.1em;
             display: inline-block;
-            width: 100%;
-            box-sizing: border-box; /* Ensures padding is included in the width */
-            white-space: nowrap; /* Prevents the text from wrapping onto a new line */
-            text-align: center; /* Centers the text horizontally */
+            width: auto; /* Adjust button size to fit the content */
+            text-align: center; /* Center the text */
+            white-space: nowrap; /* Prevent text from wrapping */
+            border: none; /* Remove borders from the button itself */
             transition: background-color 0.3s;
         }
 
         .link-button:hover {
-            background-color: #d4a700; /* Darker gold shade on hover */
+            background-color: #d4a700; /* Darker gold on hover */
         }
 
         @media (max-width: 600px) {
-            .box, .top-image {
+            .box, .top-image, .box-button {
                 width: 80%; /* Narrow the boxes and image for mobile devices */
                 min-height: 80px; /* Adjust minimum height for mobile devices */
             }
@@ -97,7 +111,7 @@
     </div>
 
     <!-- Blockchair Button Box -->
-    <div class="box">
+    <div class="box-button">
         <a href="#" class="link-button" id="blockchair-btn">Click to View Card Balance</a>
     </div>
 
