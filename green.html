@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UID Verified</title>
+    <style>
+        .green {
+            color: green;
+            font-size: 2em;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="green">Verified! ✅</h1>
+    <div>Your UID is: <span id="uid-box"></span></div>
+    
+    <!-- Enter button to navigate to template.html -->
+    <button id="enter-btn">Enter</button>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const uid = params.get('uid');
+        document.getElementById('uid-box').textContent = uid;
+
+        // Link the button to template.html, passing the UID as a query parameter
+        document.getElementById('enter-btn').addEventListener('click', () => {
+            window.location.href = `template.html?uid=${uid}`;
+        });
+    </script>
+</body>
+</html>
