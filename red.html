@@ -60,10 +60,10 @@
             display: flex; /* Use flexbox to center the button */
             justify-content: center; /* Center horizontally */
             align-items: center; /* Center vertically */
-            width: 30%; /* Same width as other boxes */
+            width: 35%; /* Same width as other boxes */
             max-width: 400px; /* Optional max width for larger screens */
             margin-bottom: 30px; /* Space between the boxes */
-            min-height: 100px;
+            min-height: 100px; /* Minimum height for the button box */
         }
 
         /* Contact button styling */
@@ -78,7 +78,6 @@
             width: auto; /* Adjust button size to fit the content */
             text-align: center; /* Center the text */
             white-space: nowrap; /* Prevent text from wrapping */
-            border: none; /* Remove borders from the button itself */
             transition: background-color 0.3s;
         }
 
@@ -139,7 +138,8 @@
                 } else {
                     // Handle invalid UID
                     document.getElementById('uid-box').textContent = 'Invalid Card ID';
-                    document.getElementById('contact-btn').style.display = 'none'; // Hide the button if invalid UID
+                    // Do not hide the contact button
+                    // document.getElementById('contact-btn').style.display = 'none'; // Hide the button if invalid UID
                 }
             })
             .catch(error => {
