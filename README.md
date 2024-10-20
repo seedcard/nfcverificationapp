@@ -2,7 +2,7 @@ Upgraded version of SEEDCARD verification - webapp that works with encoded NFC N
 
 Each tag is encoded with: Redirect URL + query containing unique 14 digit UID
 
-UID is cross referenced with list if UID codes held in a JSON file
+UID is cross-referenced with list of UID codes held in a JSON file
 
 Verified UID can access link to wallet address to check BTC balance (this card is unfunded)
 
