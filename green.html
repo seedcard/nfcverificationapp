@@ -11,8 +11,8 @@
             padding: 0;
             height: 100vh; /* Full viewport height */
             display: flex;
-            justify-content: center; /* Center content vertically */
-            align-items: center; /* Center content horizontally */
+            justify-content: center;
+            align-items: center;
             background-color: #000; /* Black background */
             overflow: hidden; /* Prevent overflow, allow manual scrolling */
         }
@@ -21,28 +21,30 @@
             position: relative;
             display: flex;
             flex-direction: column; /* Stack content vertically */
-            justify-content: center;
+            justify-content: flex-start; /* Align content towards the top */
             align-items: center;
             text-align: center;
-            color: white; /* Make text white to be visible on the black background */
+            color: white; /* White text */
             overflow-y: auto; /* Enable scrolling when necessary */
             height: 100%; /* Full height of container */
         }
 
         .splash-image {
-            max-width: 100%; /* Make the image larger */
+            max-width: 100%;
             height: auto;
+            margin-top: -50px; /* Adjust top margin to ensure the top of the image is visible */
         }
 
         .link-button {
-            margin-top: 20px; /* Add spacing above the button */
-            padding: 15px 30px; /* Button padding */
-            background-color: #fff; /* Button background color */
+            margin-top: 20px;
+            padding: 15px 30px;
+            background-color: #fff; /* White background */
             color: black; /* Button text color */
             text-decoration: none; /* Remove underline */
-            border-radius: 5px; /* Rounded corners */
-            font-size: 1.2em; /* Button font size */
-            transition: background-color 0.3s; /* Smooth transition for hover effect */
+            border-radius: 5px;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+            border: 2px solid gold; /* Add gold border */
         }
 
         .link-button:hover {
@@ -51,25 +53,25 @@
 
         .info-box {
             margin-top: 20px; /* Add spacing below the button */
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
-            color: black;
+            padding: 20px;
+            background-color: white; /* Change background to white */
+            color: black; /* Black text color */
             border-radius: 5px;
-            text-align: center;
+            border: 2px solid gold; /* Add gold border */
             max-width: 90%; /* Limit width */
+            text-align: center;
         }
 
         .info-box img {
-            width: 150px; /* Adjust size of the QR code */
+            width: 150px;
             height: auto;
             display: block;
-            margin: 10px auto; /* Center the image */
+            margin: 10px auto;
         }
 
         @media (max-width: 600px) {
-            /* For smaller devices, adjust image and button size */
             .splash-image {
-                max-width: 90%; /* Smaller image for mobile */
+                max-width: 90%;
             }
 
             .link-button {
@@ -79,6 +81,7 @@
 
             .info-box {
                 font-size: 0.9em;
+                padding: 15px;
             }
         }
     </style>
