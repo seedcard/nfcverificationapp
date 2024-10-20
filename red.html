@@ -3,21 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UID Not Verified</title>
+    <title>Red Page</title>
     <style>
-        .red {
-            color: red;
-            font-size: 2em;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh; /* Ensure the body takes up at least the full height of the viewport */
+            background: black; /* Set background color to black */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Aligns elements at the top */
+            align-items: center; /* Centers elements horizontally */
+            position: relative;
+            overflow-y: auto; /* Allow vertical scrolling */
+        }
+
+        /* Image at the top of the page */
+        .top-image {
+            width: 60%; /* Set the image width same as the boxes */
+            max-width: 400px; /* Maximum width for larger screens */
+            height: auto; /* Keep the image aspect ratio */
+            margin-top: 20px; /* Add some spacing from the top */
+            margin-bottom: 40px; /* Space between the image and the boxes */
+        }
+
+        /* Style for the white content boxes (UID, Fixed Message, Contact button) */
+        .box {
+            background-color: white; /* White background */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px;
+            text-align: center; /* Center the text and content */
+            width: 35%; /* Width is now 60% of the screen */
+            max-width: 400px; /* Optional max width for larger screens */
+            margin-bottom: 30px; /* Space between the boxes */
+            min-height: 100px; /* Minimum height for boxes */
+        }
+
+        /* Style for the UID text (to be larger) */
+        .uid-number {
+            font-size: 2em; /* Larger font size for the UID number */
+            margin-top: 5px; /* Add some space between the label and the number */
+        }
+
+        /* Fixed Message Box */
+        .fixed-message {
+            font-size: 1.2em; /* Font size for the fixed message */
+            margin-top: 10px; /* Space above the message */
+        }
+
+        /* Contact button box styling */
+        .box-button {
+            background-color: white; /* White background for the box */
+            border-radius: 5px;
+            padding: 20px; /* Add padding around the button */
+            display: flex; /* Use flexbox to center the button */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            width: 35%; /* Same width as other boxes */
+            max-width: 400px; /* Optional max width for larger screens */
+            margin-bottom: 30px; /* Space between the boxes */
+            min-height: 100px;
+        }
+
+        /* Contact button styling */
+        .link-button {
+            padding: 15px 30px;
+            background-color: #ffcc00; /* Gold color for the button */
+            color: black; /* Text color */
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            display: inline-block;
+            width: auto; /* Adjust button size to fit the content */
+            text-align: center; /* Center the text */
+            white-space: nowrap; /* Prevent text from wrapping */
+            border: none; /* Remove borders from the button itself */
+            transition: background-color 0.3s;
+        }
+
+        .link-button:hover {
+            background-color: #d4a700; /* Darker gold on hover */
+        }
+
+        @media (max-width: 600px) {
+            .box, .top-image, .box-button {
+                width: 80%; /* Narrow the boxes and image for mobile devices */
+                min-height: 80px; /* Adjust minimum height for mobile devices */
+            }
         }
     </style>
 </head>
 <body>
-    <h1 class="red">Not Verified! ❌</h1>
-    <div>Card ID: <span id="uid-box"></span></div>
+
+    <!-- Top Image (Instead of background) -->
+    <img src="https://raw.githubusercontent.com/seedcard/nfcverificationtest/2c913127a5e6f4e5b4911150133bb9376c57faf7/images/verifiedscreen.png?raw=true" alt="Verification Image" class="top-image">
+
+    <!-- UID Box -->
+    <div class="box" id="uid-box">
+        <p>Card ID</p>
+        <div class="uid-number" id="uid-display">Loading...</div>
+    </div>
+
+    <!-- Fixed Message Box -->
+    <div class="box">
+        <p>Fixed Message</p>
+        <div class="fixed-message">This is a fixed message displayed instead of a QR code.</div>
+    </div>
+
+    <!-- Contact Button Box -->
+    <div class="box-button">
+        <a href="mailto:contact@example.com" class="link-button" id="contact-btn">Contact Us</a>
+    </div>
 
     <script>
+        // Get the UID from the URL parameters
         const params = new URLSearchParams(window.location.search);
-        document.getElementById('uid-box').textContent = params.get('uid');
+        const uid = params.get('uid');
+
+        // Fetch data from uids.json
+        fetch('uids.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Find the UID data from the fetched JSON
+                const uidData = data.validUIDs.find(item => item.uid === uid);
+
+                if (uidData) {
+                    // Populate the UID box
+                    document.getElementById('uid-display').textContent = uidData.uid;
+                } else {
+                    // Handle invalid UID
+                    document.getElementById('uid-box').textContent = 'Invalid UID.';
+                    document.getElementById('contact-btn').style.display = 'none'; // Hide the button if invalid UID
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching UID data:', error);
+                document.body.innerHTML = '<p>Error loading UID data.</p>';
+            });
     </script>
 </body>
 </html>
