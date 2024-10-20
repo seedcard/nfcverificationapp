@@ -5,32 +5,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UID Verified</title>
     <style>
-        .green {
-            color: green;
-            font-size: 2em;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
+            background-color: #000; /* Black background */
         }
-        button {
-            padding: 10px 20px;
-            font-size: 1.2em;
+
+        .splash-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white; /* Make text white to be visible on the black background */
+        }
+
+        .splash-image {
+            max-width: 100%; /* Make the image larger */
+            height: auto;
+        }
+
+        .link-button {
+            position: absolute; /* Absolute position to place the button on top of the image */
+            bottom: 10%; /* Move the button 10% from the bottom of the image */
+            padding: 15px 30px; /* Button padding */
+            background-color: #fff; /* Button background color */
+            color: black; /* Button text color */
+            text-decoration: none; /* Remove underline */
+            border-radius: 5px; /* Rounded corners */
+            font-size: 1.2em; /* Button font size */
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+        }
+
+        .link-button:hover {
+            background-color: #e6b800; /* Darker shade on hover */
+        }
+
+        @media (max-width: 600px) {
+            /* For smaller devices, adjust image and button size */
+            .splash-image {
+                max-width: 90%; /* Smaller image for mobile */
+            }
+
+            .link-button {
+                font-size: 1em;
+                padding: 10px 20px;
+            }
+        }
+
+        /* New styling for UID and QR code box */
+        .info-box {
+            position: absolute;
+            top: 10%; /* Place it near the top */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .info-box img {
+            width: 150px; /* Adjust size of the QR code */
+            height: auto;
+            display: block;
+            margin: 0 auto; /* Center the image */
         }
     </style>
 </head>
 <body>
-    <h1 class="green">Verified! ✅</h1>
-    <div>Card ID: <span id="uid-box"></span></div>
-    
-    <!-- Enter button to navigate to template.html -->
-    <button id="enter-btn">Enter</button>
+    <div class="splash-container">
+        <!-- Splash Image -->
+        <img src="https://i.ibb.co/G5Y61zM/SEEDCARD-verification-screen-3.png" alt="SEEDCARD-verification-screen-3" class="splash-image">
+
+        <!-- Info Box (UID and QR code) -->
+        <div class="info-box" id="info-box">
+            <p>UID: <span id="uid-box">Loading...</span></p>
+            <p>QR Code:</p>
+            <img id="qr-box" src="" alt="QR Code">
+        </div>
+
+        <!-- Button to Blockchair (linked dynamically) -->
+        <a href="#" class="link-button" id="blockchair-btn">View on Blockchair</a>
+    </div>
 
     <script>
+        // Get the UID from the URL parameters
         const params = new URLSearchParams(window.location.search);
         const uid = params.get('uid');
-        document.getElementById('uid-box').textContent = uid;
 
-        // Link the button to template.html, passing the UID as a query parameter
-        document.getElementById('enter-btn').addEventListener('click', () => {
-            window.location.href = `template.html?uid=${uid}`;
-        });
+        // Fetch data from uids.json
+        fetch('uids.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Find the UID data from the fetched JSON
+                const uidData = data.validUIDs.find(item => item.uid === uid);
+
+                if (uidData) {
+                    // Populate the UID box
+                    document.getElementById('uid-box').textContent = uidData.uid;
+
+                    // Extract wallet address from Blockchair URL
+                    const walletAddress = uidData.blockchairUrl.split('/').pop(); // Get the last part of the URL
+
+                    // Generate the QR code URL using the wallet address
+                    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(walletAddress)}&size=200x200`;
+                    document.getElementById('qr-box').src = qrCodeUrl; // Set the image source
+
+                    // Set the Blockchair button link dynamically
+                    document.getElementById('blockchair-btn').href = uidData.blockchairUrl;
+                } else {
+                    // Handle invalid UID
+                    document.getElementById('info-box').innerHTML = '<p>Invalid UID.</p>';
+                    document.getElementById('blockchair-btn').style.display = 'none'; // Hide the button if invalid UID
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching UID data:', error);
+                document.body.innerHTML = '<p>Error loading UID data.</p>';
+            });
     </script>
 </body>
 </html>
