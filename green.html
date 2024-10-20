@@ -21,7 +21,7 @@
 
         /* Image at the top of the page */
         .top-image {
-            width: 35%; /* Set the image width same as the boxes */
+            width: 60%; /* Set the image width same as the boxes */
             max-width: 400px; /* Maximum width for larger screens */
             height: auto; /* Keep the image aspect ratio */
             margin-top: 20px; /* Add some spacing from the top */
@@ -44,6 +44,12 @@
         .box img {
             max-width: 100%;
             height: auto; /* Keep QR code proportional */
+        }
+
+        /* Style for the UID text (to be larger) */
+        .uid-number {
+            font-size: 1.5em; /* Larger font size for the UID number */
+            margin-top: 10px; /* Add some space between the label and the number */
         }
 
         /* Blockchair button styling */
@@ -78,9 +84,10 @@
     <!-- Top Image (Instead of background) -->
     <img src="https://raw.githubusercontent.com/seedcard/nfcverificationtest/2c913127a5e6f4e5b4911150133bb9376c57faf7/images/verifiedscreen.png?raw=true" alt="Verification Image" class="top-image">
 
-    <!-- UID Box -->
+    <!-- UID Box (Modified to match layout of QR Code box) -->
     <div class="box" id="uid-box">
-        UID: <span id="uid-display">Loading...</span>
+        <p>UID:</p>
+        <div class="uid-number" id="uid-display">Loading...</div>
     </div>
 
     <!-- QR Code Box -->
