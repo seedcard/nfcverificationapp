@@ -6,9 +6,9 @@ UID is cross referenced with list if UID codes held in a JSON file
 
 Example of verified UID - https://seedcard.github.io/nfcverificationtest/index.html?uid=0442157A4F1390
 
-Example of unverified UID - https://seedcard.github.io/nfcverificationtest/index.html?uid=0430167A4F1390
+Verified UID can access link to wallet address to check BTC balance (this card is unfunded)
 
-Verified UID can access link to wallet address to check BTC balance
+Example of unverified UID - https://seedcard.github.io/nfcverificationtest/index.html?uid=0430167A4F1390
 
 Unverified UID can click link to send email with UID code to seedcard team
 
