@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UID Data Template</title>
+    <style>
+        .box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 10px 0;
+        }
+        .box img {
+            width: 200px;
+            height: 200px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>UID Data</h1>
+    
+    <!-- Boxes for UID, QR Image, and Blockchair Button -->
+    <div class="box">UID: <span id="uid-box"></span></div>
+    <div class="box">QR Code: <img id="qr-box" src="" alt="QR Code"></div>
+    <div class="box">
+        <button id="blockchair-btn">View on Blockchair</button>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const uid = params.get('uid');
+
+        // Fetch data from uids.json
+        fetch('uids.json')
+            .then(response => response.json())
+            .then(data => {
+                const uidData = data.validUIDs.find(item => item.uid === uid);
+
+                if (uidData) {
+                    // Populate the UID box
+                    document.getElementById('uid-box').textContent = uidData.uid;
+
+                    // Populate the QR Image
+                    document.getElementById('qr-box').src = uidData.qrImage;
+
+                    // Handle Blockchair button
+                    document.getElementById('blockchair-btn').addEventListener('click', () => {
+                        window.open(uidData.blockchairUrl, '_blank');
+                    });
+                } else {
+                    document.body.innerHTML = '<p>Invalid UID.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching UID data:', error);
+                document.body.innerHTML = '<p>Error loading UID data.</p>';
+            });
+    </script>
+</body>
+</html>
