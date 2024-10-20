@@ -112,7 +112,7 @@
 
     <!-- Contact Button Box -->
     <div class="box-button">
-        <a href="mailto:seedcardxyz@gmail.com" class="link-button" id="contact-btn">CONTACT</a>
+        <a href="#" class="link-button" id="contact-btn">CONTACT</a>
     </div>
 
     <script>
@@ -135,11 +135,14 @@
                 if (uidData) {
                     // Populate the UID box
                     document.getElementById('uid-display').textContent = uidData.uid;
+
+                    // Set the contact button href with the UID in the subject line
+                    const contactEmail = "contact@example.com";
+                    const subject = `Scanned UID: ${uidData.uid}`;
+                    document.getElementById('contact-btn').href = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}`;
                 } else {
                     // Handle invalid UID
                     document.getElementById('uid-box').textContent = 'Invalid Card ID';
-                    // Do not hide the contact button
-                    // document.getElementById('contact-btn').style.display = 'none'; // Hide the button if invalid UID
                 }
             })
             .catch(error => {
