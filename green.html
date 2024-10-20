@@ -9,89 +9,89 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            height: 100vh; /* Full viewport height */
-            background: black; /* Black background */
+            height: 100vh;
+            background: black;
             display: flex;
-            justify-content: center;
-            align-items: flex-end; /* Align content to the bottom of the viewport */
-            background-image: url('https://raw.githubusercontent.com/seedcard/nfcverificationtest/2c913127a5e6f4e5b4911150133bb9376c57faf7/images/verifiedscreen.png'); /* Background from GitHub */
-            background-size: contain; /* Ensure the image fits within the viewport */
-            background-position: center;
-            background-repeat: no-repeat; /* Prevent repetition */
+            flex-direction: column;
+            justify-content: flex-start; /* Aligns elements at the top */
+            align-items: center; /* Centers elements horizontally */
             position: relative;
-            overflow: hidden;
         }
 
+        /* Background image for the top of the page */
+        .background-image {
+            background-image: url('https://raw.githubusercontent.com/seedcard/nfcverificationtest/2c913127a5e6f4e5b4911150133bb9376c57faf7/images/verifiedscreen.png');
+            background-size: contain;
+            background-position: top center;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 40vh; /* Covers the top 40% of the viewport */
+        }
+
+        .box {
+            background-color: white; /* White background */
+            border: 5px solid gold; /* Gold border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 20px;
+            text-align: center; /* Center the text and content */
+            width: 300px; /* Fixed width for all boxes */
+            margin-bottom: 20px; /* Space between the boxes */
+        }
+
+        .box img {
+            max-width: 100%;
+            height: auto; /* Keep QR code proportional */
+        }
+
+        /* Blockchair button styling */
         .link-button {
-            margin-bottom: 20px;
             padding: 15px 30px;
-            background-color: #fff; /* White background */
-            color: black; /* Button text color */
-            text-decoration: none; /* Remove underline */
+            background-color: #fff;
+            color: black;
+            text-decoration: none;
             border-radius: 5px;
             font-size: 1.2em;
+            border: 5px solid gold;
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box; /* Ensures padding is included in the width */
             transition: background-color 0.3s;
-            border: 5px solid gold; /* 5px gold border */
-            z-index: 1; /* Ensure button appears on top of background */
         }
 
         .link-button:hover {
-            background-color: #e6b800; /* Darker shade on hover */
-        }
-
-        .info-box {
-            margin-bottom: 50px; /* Spacing above the button */
-            padding: 20px;
-            background-color: white; /* White background */
-            color: black;
-            border-radius: 5px;
-            border: 5px solid gold; /* 5px gold border */
-            max-width: 90%;
-            text-align: center;
-            z-index: 1; /* Ensure info box appears on top of background */
-        }
-
-        .info-box img {
-            width: 150px;
-            height: auto;
-            display: block;
-            margin: 10px auto;
+            background-color: #e6b800;
         }
 
         @media (max-width: 600px) {
-            /* Adjustments for mobile */
-            body {
-                background-size: cover; /* Ensure the image covers the screen */
-                background-position: top center; /* Better positioning on mobile */
+            .box {
+                width: 90%; /* Make boxes responsive on small screens */
             }
 
-            .link-button {
-                font-size: 1em;
-                padding: 10px 20px;
-            }
-
-            .info-box {
-                font-size: 0.9em;
-                padding: 15px;
-                margin-bottom: 20px; /* Reduce margin for mobile */
-            }
-
-            .info-box img {
-                width: 100px; /* Reduce QR code size on smaller screens */
+            .background-image {
+                height: 30vh; /* Adjust background image size for smaller screens */
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Button to Blockchair (linked dynamically) -->
-    <a href="#" class="link-button" id="blockchair-btn">View on Blockchair</a>
+    <!-- Background image at the top -->
+    <div class="background-image"></div>
 
-    <!-- Info Box (UID and QR code) -->
-    <div class="info-box" id="info-box">
-        <p>UID: <span id="uid-box">Loading...</span></p>
+    <!-- UID Box -->
+    <div class="box" id="uid-box">
+        UID: <span id="uid-display">Loading...</span>
+    </div>
+
+    <!-- QR Code Box -->
+    <div class="box" id="qr-box">
         <p>QR Code:</p>
-        <img id="qr-box" src="" alt="QR Code">
+        <img id="qr-code" src="" alt="QR Code">
+    </div>
+
+    <!-- Blockchair Button Box -->
+    <div class="box">
+        <a href="#" class="link-button" id="blockchair-btn">View on Blockchair</a>
     </div>
 
     <script>
@@ -113,20 +113,20 @@
 
                 if (uidData) {
                     // Populate the UID box
-                    document.getElementById('uid-box').textContent = uidData.uid;
+                    document.getElementById('uid-display').textContent = uidData.uid;
 
                     // Extract wallet address from Blockchair URL
                     const walletAddress = uidData.blockchairUrl.split('/').pop(); // Get the last part of the URL
 
                     // Generate the QR code URL using the wallet address
                     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(walletAddress)}&size=200x200`;
-                    document.getElementById('qr-box').src = qrCodeUrl; // Set the image source
+                    document.getElementById('qr-code').src = qrCodeUrl; // Set the image source
 
                     // Set the Blockchair button link dynamically
                     document.getElementById('blockchair-btn').href = uidData.blockchairUrl;
                 } else {
                     // Handle invalid UID
-                    document.getElementById('info-box').innerHTML = '<p>Invalid UID.</p>';
+                    document.getElementById('uid-box').textContent = 'Invalid UID.';
                     document.getElementById('blockchair-btn').style.display = 'none'; // Hide the button if invalid UID
                 }
             })
