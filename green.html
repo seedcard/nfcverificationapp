@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
             min-height: 100vh; /* Ensure the body takes up at least the full height of the viewport */
-            background: black;
+            background: black; /* Set background color to black */
             display: flex;
             flex-direction: column;
             justify-content: flex-start; /* Aligns elements at the top */
@@ -19,14 +19,12 @@
             overflow-y: auto; /* Allow vertical scrolling */
         }
 
-        /* Background image for the top of the page */
-        .background-image {
-            background-image: url('https://github.com/seedcard/nfcverificationtest/blob/main/qr-images/SEEDCARD-verification-screen-3.png?raw=true');
-            background-size: cover; /* Ensures the image covers the div */
-            background-position: top; /* Centers the image */
-            background-repeat: no-repeat;
-            width: 100%; /* Full width of the viewport */
-            height: 40vh; /* Covers the top 40% of the viewport */
+        /* Image at the top of the page */
+        .top-image {
+            width: 35%; /* Set the image width same as the boxes */
+            max-width: 400px; /* Maximum width for larger screens */
+            height: auto; /* Keep the image aspect ratio */
+            margin-top: 20px; /* Add some spacing from the top */
             margin-bottom: 20px; /* Space between the image and the boxes */
         }
 
@@ -37,7 +35,7 @@
             border-radius: 5px; /* Rounded corners */
             padding: 20px;
             text-align: center; /* Center the text and content */
-            width: 40%; /* Width is now 60% of the screen */
+            width: 35%; /* Width is now 60% of the screen */
             max-width: 400px; /* Optional max width for larger screens */
             margin-bottom: 20px; /* Space between the boxes */
             min-height: 100px; /* Minimum height for boxes */
@@ -68,22 +66,17 @@
         }
 
         @media (max-width: 600px) {
-            .box {
-                width: 80%; /* Narrow the boxes for mobile devices */
+            .box, .top-image {
+                width: 80%; /* Narrow the boxes and image for mobile devices */
                 min-height: 80px; /* Adjust minimum height for mobile devices */
-            }
-
-            .background-image {
-                height: 30vh; /* Adjust background image size for smaller screens */
-                margin-bottom: 15px; /* Space between the image and the boxes */
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Background image at the top -->
-    <div class="background-image"></div>
+    <!-- Top Image (Instead of background) -->
+    <img src="https://raw.githubusercontent.com/seedcard/nfcverificationtest/2c913127a5e6f4e5b4911150133bb9376c57faf7/images/verifiedscreen.png?raw=true" alt="Verification Image" class="top-image">
 
     <!-- UID Box -->
     <div class="box" id="uid-box">
