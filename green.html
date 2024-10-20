@@ -20,11 +20,11 @@
 
         /* Background image for the top of the page */
         .background-image {
-            background-image: url('https://raw.githubusercontent.com/seedcard/nfcverificationtest/2c913127a5e6f4e5b4911150133bb9376c57faf7/images/verifiedscreen.png');
-            background-size: contain;
-            background-position: top center;
+            background-image: url('https://raw.githubusercontent.com/seedcard/nfcverificationtest/2c913127a5e6f4e5b4911150133bb9376c57faf7/images/verifiedscreen.png?raw=true');
+            background-size: cover; /* Ensures the image covers the div */
+            background-position: center; /* Centers the image */
             background-repeat: no-repeat;
-            width: 100%;
+            width: 100%; /* Full width of the viewport */
             height: 40vh; /* Covers the top 40% of the viewport */
         }
 
@@ -34,7 +34,8 @@
             border-radius: 5px; /* Rounded corners */
             padding: 20px;
             text-align: center; /* Center the text and content */
-            width: 300px; /* Fixed width for all boxes */
+            width: 80%; /* Width is now 80% of the screen */
+            max-width: 600px; /* Optional max width for larger screens */
             margin-bottom: 20px; /* Space between the boxes */
         }
 
