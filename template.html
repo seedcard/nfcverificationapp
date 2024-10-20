@@ -58,7 +58,6 @@
         // Fetch data from uids.json
         fetch('uids.json')
             .then(response => {
-                // Check if the response is OK (status 200)
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -72,8 +71,12 @@
                     // Populate the UID box
                     document.getElementById('uid-box').textContent = uidData.uid;
 
-                    // Populate the QR Image
-                    document.getElementById('qr-box').src = uidData.qrImage;  // Set the image source
+                    // Extract wallet address from Blockchair URL
+                    const walletAddress = uidData.blockchairUrl.split('/').pop(); // Get the last part of the URL
+
+                    // Generate the QR code URL using the wallet address
+                    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(walletAddress)}&size=200x200`;
+                    document.getElementById('qr-box').src = qrCodeUrl; // Set the image source
 
                     // Handle Blockchair button click
                     document.getElementById('blockchair-btn').addEventListener('click', () => {
