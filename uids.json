@@ -1,0 +1,14 @@
+{
+  "validUIDs": [
+    {
+      "uid": "04AABBCCDD",
+      "qrImage": "qr-images/04AABBCCDD.png",
+      "blockchairUrl": "https://blockchair.com/bitcoin/address/04AABBCCDD"
+    },
+    {
+      "uid": "1234567890",
+      "qrImage": "qr-images/1234567890.png",
+      "blockchairUrl": "https://blockchair.com/bitcoin/address/1234567890"
+    }
+  ]
+}
