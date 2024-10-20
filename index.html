@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC Verification</title>
+    <style>
+        .warning {
+            color: orange;
+            font-size: 1.5em;
+        }
+        .error {
+            color: red;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <h1>NFC Verification Platform</h1>
+    <div id="status">Tap your NFC tag to verify.</div>
+
+    <script>
+        // Function to check if the device is Android
+        function isAndroid() {
+            return /Android/i.test(navigator.userAgent);
+        }
+
+        // Function to load the valid UIDs from the JSON file
+        async function loadValidUIDs() {
+            try {
+                const response = await fetch('uids.json'); // Change to your actual JSON file URL
+                
+                // If response is not OK, handle error
+                if (!response.ok) {
+                    throw new Error('Failed to load UID list.');
+                }
+
+                // Attempt to parse the JSON response
+                const data = await response.json(); // Parse as JSON
+                return data.validUIDs;
+
+            } catch (error) {
+                // Handle any fetch or parsing errors
+                document.getElementById("status").innerHTML = `<span class="error">Error: Unable to load UID list. ${error.message}</span>`;
+                throw error; // Re-throw to ensure we stop execution
+            }
+        }
+
+        // Function to handle NFC scanning and UID verification
+        async function verifyUID() {
+            // First check if the device is Android
+            if (!isAndroid()) {
+                document.getElementById("status").innerHTML = '<span class="warning">Error: This app requires an Android device!</span>';
+                return;
+            }
+
+            // Check if NFCReader API is supported in the current browser
+            if (!('NFCReader' in window)) {
+                document.getElementById("status").innerHTML = '<span class="error">Error: NFC is not supported on this device or browser.</span>';
+                return;
+            }
+
+            // Load valid UIDs and handle potential errors
+            let validUIDs;
+            try {
+                validUIDs = await loadValidUIDs();
+            } catch (error) {
+                // Stop further execution if UIDs couldn't be loaded
+                return;
+            }
+
+            // Try to start NFC scanning
+            try {
+                const ndef = new NFCReader();
+
+                ndef.onreading = event => {
+                    const uid = event.serialNumber; // UID of the NFC tag
+
+                    // Check if UID is valid
+                    if (validUIDs.includes(uid)) {
+                        // Redirect to green.html with UID as query parameter
+                        window.location.href = `green.html?uid=${uid}`;
+                    } else {
+                        // Redirect to red.html with UID as query parameter
+                        window.location.href = `red.html?uid=${uid}`;
+                    }
+                };
+
+                await ndef.scan();
+
+            } catch (error) {
+                console.error("NFC reading error:", error);
+                document.getElementById("status").innerHTML = '<span class="error">Error: Unable to read NFC tag. Please try again.</span>';
+            }
+        }
+
+        // Start the NFC verification when the page loads
+        window.onload = verifyUID;
+    </script>
+</body>
+</html>
