@@ -14,9 +14,10 @@
             display: flex;
             justify-content: center;
             align-items: flex-end; /* Align content to the bottom of the viewport */
-            background-image: url('https://github.com/seedcard/nfcverificationtest/blob/main/images/verifiedscreen.png?raw=true'); /* Background from GitHub */
-            background-size: cover; /* Cover the entire screen */
+            background-image: url('https://github.com/seedcard/nfcverificationtest/blob/main/qr-images/SEEDCARD-verification-screen-3.png?raw=true'); /* Background from GitHub */
+            background-size: contain; /* Ensure the image fits within the viewport */
             background-position: center;
+            background-repeat: no-repeat; /* Prevent repetition */
             position: relative;
             overflow: hidden;
         }
@@ -58,6 +59,12 @@
         }
 
         @media (max-width: 600px) {
+            /* Adjustments for mobile */
+            body {
+                background-size: cover; /* Ensure the image covers the screen */
+                background-position: top center; /* Better positioning on mobile */
+            }
+
             .link-button {
                 font-size: 1em;
                 padding: 10px 20px;
@@ -66,6 +73,11 @@
             .info-box {
                 font-size: 0.9em;
                 padding: 15px;
+                margin-bottom: 20px; /* Reduce margin for mobile */
+            }
+
+            .info-box img {
+                width: 100px; /* Reduce QR code size on smaller screens */
             }
         }
     </style>
