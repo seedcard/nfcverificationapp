@@ -34,7 +34,7 @@
             border: 5px solid gold; /* Gold border */
             border-radius: 5px; /* Rounded corners */
             padding: 10px;
-            text-align: top; /* Center the text and content */
+            text-align: centre; /* Center the text and content */
             width: 35%; /* Width is now 60% of the screen */
             max-width: 400px; /* Optional max width for larger screens */
             margin-bottom: 30px; /* Space between the boxes */
@@ -86,19 +86,19 @@
 
     <!-- UID Box (Modified to match layout of QR Code box) -->
     <div class="box" id="uid-box">
-        <p>UID:</p>
+        <p>Card ID</p>
         <div class="uid-number" id="uid-display">Loading...</div>
     </div>
 
     <!-- QR Code Box -->
     <div class="box" id="qr-box">
-        <p>QR Code:</p>
+        <p>Public Key</p>
         <img id="qr-code" src="" alt="QR Code">
     </div>
 
     <!-- Blockchair Button Box -->
     <div class="box">
-        <a href="#" class="link-button" id="blockchair-btn">View on Blockchair</a>
+        <a href="#" class="link-button" id="blockchair-btn">Click to View Card Balance</a>
     </div>
 
     <script>
