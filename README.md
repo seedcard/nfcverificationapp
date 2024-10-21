@@ -2,7 +2,7 @@ Upgraded version of SEEDCARD verification - a webapp that works with encoded NFC
 
 Tag is built into the SEEDCARD and has a unique 14 character UID code encoded by the manufactuer - NXP
 
-Every tag is encoded with the same redirect URL - https://seedcard.github.io/nfcverificationapp/index.html
+Every tag is encoded with the same redirect URL - https://seedcard.github.io/nfcverificationapp/index.html? (CHECK)
 
 Link is opened and tag UID is read when the tag is placed near an NFC enabled device
 
