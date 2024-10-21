@@ -12,5 +12,7 @@ Unverified UID can click link to send email with UID code to seedcard team
 
 Example of unverified UID - https://seedcard.github.io/nfcverificationapp/index.html?uid=0430167A4F1390
 
+This app is work in progress - the direct tap to scan of NFC tag is not working yet!
+
 
 
