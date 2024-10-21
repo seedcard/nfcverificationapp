@@ -11,12 +11,17 @@
     <p id="status">Scanning for NFC tags...</p>
 
     <script>
-        // Function to handle verification based on UID (either from NFC tag hardware UID or NDEF record's "id")
+        // Function to handle verification based on UID (either from NFC or URL)
         function handleVerification(uid) {
             fetch('uids.json')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
-                    const uidData = data.validUIDs.find(item => item.id === uid);
+                    const uidData = data.validUIDs.find(item => item.uid === uid);
 
                     if (uidData) {
                         // Redirect to green.html with UID in URL
@@ -28,85 +33,36 @@
                 })
                 .catch(error => {
                     console.error('Error fetching UID data:', error);
-                    document.getElementById('status').textContent = 'Error loading UID data.';
+                    document.body.innerHTML = '<p>Error loading UID data.</p>';
                 });
         }
 
-        // Function to initialize NFC reading and provide detailed error handling
-        function startNFCReader() {
+        // Check if a UID is passed via URL (simulate NFC scan)
+        const params = new URLSearchParams(window.location.search);
+        const uidFromUrl = params.get('uid');
+
+        if (uidFromUrl) {
+            // If UID is provided in URL, handle the verification
+            document.getElementById('status').textContent = `Verifying UID: ${uidFromUrl}`;
+            handleVerification(uidFromUrl);
+        } else {
+            // If no UID in URL, attempt NFC scanning (original functionality)
             if ('NFCReader' in window) {
                 const nfcReader = new NFCReader();
-
-                // When an NFC tag is successfully read
                 nfcReader.onreading = event => {
-                    document.getElementById('status').textContent = 'NFC tag detected. Processing...';
-                    
-                    const serialNumber = event.serialNumber;  // Hardware-based UID
-
-                    if (serialNumber) {
-                        // Use the hardware UID (serialNumber)
-                        document.getElementById('status').textContent = `Verifying hardware UID: ${serialNumber}`;
-                        handleVerification(serialNumber);
-                    } else if (event.message) {
-                        // Handle NDEF message to extract custom "id"
-                        let tagFound = false;
-                        for (const record of event.message.records) {
-                            const decoder = new TextDecoder();
-                            const recordData = decoder.decode(record.data);
-
-                            // Assuming the 'id' is stored in JSON format in the NDEF record
-                            try {
-                                const parsedData = JSON.parse(recordData);
-                                if (parsedData.id) {
-                                    document.getElementById('status').textContent = `Verifying NDEF id: ${parsedData.id}`;
-                                    handleVerification(parsedData.id);
-                                    tagFound = true;
-                                    break;
-                                }
-                            } catch (error) {
-                                console.error('Error parsing NDEF data:', error);
-                                document.getElementById('status').textContent = 'Error parsing NDEF tag data.';
-                            }
-                        }
-                        if (!tagFound) {
-                            document.getElementById('status').textContent = 'No valid ID found in NDEF message.';
-                        }
-                    } else {
-                        document.getElementById('status').textContent = 'No valid UID or ID found on the NFC tag.';
-                    }
+                    const uid = event.serialNumber;
+                    handleVerification(uid);
                 };
-
-                // When an error occurs while reading NFC
-                nfcReader.onerror = error => {
-                    console.error('NFC Reader Error: ', error);
+                nfcReader.onerror = () => {
                     document.getElementById('status').textContent = 'Error reading NFC tag.';
                 };
-
-                // Start NFC Reader
                 nfcReader.start().catch(error => {
-                    console.error('Error starting NFC Reader: ', error);
                     document.getElementById('status').textContent = 'NFC reading failed. Please ensure NFC is enabled on your device.';
                 });
             } else {
-                // NFC is not supported on the device or browser
-                document.getElementById('status').textContent = 'NFC is not supported on this browser or device.';
-                console.log('NFCReader API is not available in this browser.');
+                document.getElementById('status').textContent = 'NFC is not supported on this device. Please use a different device.';
             }
         }
-
-        // Start NFC reading on page load
-        document.addEventListener('DOMContentLoaded', (event) => {
-            document.getElementById('status').textContent = 'Initializing NFC reader...';
-
-            // Check if browser supports NFC
-            if ('NFCReader' in window) {
-                console.log('NFCReader supported');
-                startNFCReader();
-            } else {
-                document.getElementById('status').textContent = 'NFC is not supported on this device. Please use a different device or browser.';
-                console.error('NFCReader is not supported on this browser.');
-            }
-        });
     </script>
 </body>
 </html>
