@@ -28,54 +28,85 @@
                 })
                 .catch(error => {
                     console.error('Error fetching UID data:', error);
-                    document.body.innerHTML = '<p>Error loading UID data.</p>';
+                    document.getElementById('status').textContent = 'Error loading UID data.';
                 });
         }
 
-        // Attempt NFC scanning (without URL string fallback)
-        if ('NFCReader' in window) {
-            const nfcReader = new NFCReader();
-            
-            nfcReader.onreading = event => {
-                const serialNumber = event.serialNumber; // Hardware-based UID
+        // Function to initialize NFC reading and provide detailed error handling
+        function startNFCReader() {
+            if ('NFCReader' in window) {
+                const nfcReader = new NFCReader();
 
-                if (serialNumber) {
-                    // Use the hardware UID (serialNumber)
-                    document.getElementById('status').textContent = `Verifying hardware UID: ${serialNumber}`;
-                    handleVerification(serialNumber);
-                } else if (event.message) {
-                    // Process NDEF message to extract custom "id" from the record
-                    for (const record of event.message.records) {
-                        const decoder = new TextDecoder();
-                        const recordData = decoder.decode(record.data);
+                // When an NFC tag is successfully read
+                nfcReader.onreading = event => {
+                    document.getElementById('status').textContent = 'NFC tag detected. Processing...';
+                    
+                    const serialNumber = event.serialNumber;  // Hardware-based UID
 
-                        // Assume "id" is stored in the record data as JSON
-                        try {
-                            const parsedData = JSON.parse(recordData);
-                            if (parsedData.id) {
-                                document.getElementById('status').textContent = `Verifying NDEF id: ${parsedData.id}`;
-                                handleVerification(parsedData.id);
-                                return;  // Stop once "id" is found and verified
+                    if (serialNumber) {
+                        // Use the hardware UID (serialNumber)
+                        document.getElementById('status').textContent = `Verifying hardware UID: ${serialNumber}`;
+                        handleVerification(serialNumber);
+                    } else if (event.message) {
+                        // Handle NDEF message to extract custom "id"
+                        let tagFound = false;
+                        for (const record of event.message.records) {
+                            const decoder = new TextDecoder();
+                            const recordData = decoder.decode(record.data);
+
+                            // Assuming the 'id' is stored in JSON format in the NDEF record
+                            try {
+                                const parsedData = JSON.parse(recordData);
+                                if (parsedData.id) {
+                                    document.getElementById('status').textContent = `Verifying NDEF id: ${parsedData.id}`;
+                                    handleVerification(parsedData.id);
+                                    tagFound = true;
+                                    break;
+                                }
+                            } catch (error) {
+                                console.error('Error parsing NDEF data:', error);
+                                document.getElementById('status').textContent = 'Error parsing NDEF tag data.';
                             }
-                        } catch (error) {
-                            console.error('Error parsing NDEF data:', error);
                         }
+                        if (!tagFound) {
+                            document.getElementById('status').textContent = 'No valid ID found in NDEF message.';
+                        }
+                    } else {
+                        document.getElementById('status').textContent = 'No valid UID or ID found on the NFC tag.';
                     }
-                } else {
-                    document.getElementById('status').textContent = 'No valid UID or ID found on the NFC tag.';
-                }
-            };
+                };
 
-            nfcReader.onerror = () => {
-                document.getElementById('status').textContent = 'Error reading NFC tag.';
-            };
+                // When an error occurs while reading NFC
+                nfcReader.onerror = error => {
+                    console.error('NFC Reader Error: ', error);
+                    document.getElementById('status').textContent = 'Error reading NFC tag.';
+                };
 
-            nfcReader.start().catch(error => {
-                document.getElementById('status').textContent = 'NFC reading failed. Please ensure NFC is enabled on your device.';
-            });
-        } else {
-            document.getElementById('status').textContent = 'NFC is not supported on this device. Please use a different device.';
+                // Start NFC Reader
+                nfcReader.start().catch(error => {
+                    console.error('Error starting NFC Reader: ', error);
+                    document.getElementById('status').textContent = 'NFC reading failed. Please ensure NFC is enabled on your device.';
+                });
+            } else {
+                // NFC is not supported on the device or browser
+                document.getElementById('status').textContent = 'NFC is not supported on this browser or device.';
+                console.log('NFCReader API is not available in this browser.');
+            }
         }
+
+        // Start NFC reading on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.getElementById('status').textContent = 'Initializing NFC reader...';
+
+            // Check if browser supports NFC
+            if ('NFCReader' in window) {
+                console.log('NFCReader supported');
+                startNFCReader();
+            } else {
+                document.getElementById('status').textContent = 'NFC is not supported on this device. Please use a different device or browser.';
+                console.error('NFCReader is not supported on this browser.');
+            }
+        });
     </script>
 </body>
 </html>
