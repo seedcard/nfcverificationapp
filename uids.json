@@ -1,19 +1,23 @@
 {
   "validUIDs": [
     {
-      "uid": "0442157A4F1390",
+      "uid": "042F1C22496880",
       "blockchairUrl": "https://blockchair.com/bitcoin/address/bc1qxjyjs76d9ltthursnkl82swjlg0vc70j7lz5jr"
     },
      {
-      "uid": "0471167A4F1390",
+      "uid": "048E3522496880",
       "blockchairUrl": "https://blockchair.com/bitcoin/address/bc1qxjyjs76d9ltthursnkl82swjlg0vc70j7lz5jr"
     },
      {
-      "uid": "0441167A4F1390",
+      "uid": "041E3022496880",
       "blockchairUrl": "https://blockchair.com/bitcoin/address/bc1qxjyjs76d9ltthursnkl82swjlg0vc70j7lz5jr"
     },
     {
-      "uid": "0472167A4F1390",
+      "uid": "04A79822496880",
+      "blockchairUrl": "https://blockchair.com/bitcoin/address/bc1qxjyjs76d9ltthursnkl82swjlg0vc70j7lz5jr"
+    },
+    {
+      "uid": "04373022496880",
       "blockchairUrl": "https://blockchair.com/bitcoin/address/bc1qxjyjs76d9ltthursnkl82swjlg0vc70j7lz5jr"
     }
   ]
