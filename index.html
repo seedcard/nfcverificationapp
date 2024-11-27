@@ -1,68 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NFC Verification Platform</title>
-</head>
-<body>
-    <h1>NFC Verification Platform</h1>
-
-    <p id="status">Scanning for NFC tags...</p>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      #output {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background: #f9f9f9;
+        color: rgb(72, 66, 66);
+      }
+      #output-help-text {
+        margin-top: 4px;
+        font-size: x-small;
+        color: gray;
+      }
+    </style>
 
     <script>
-        // Function to handle verification based on UID (either from NFC or URL)
-        function handleVerification(uid) {
-            fetch('uids.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const uidData = data.validUIDs.find(item => item.uid === uid);
+      let statusEl;
+      let output_el;
+      var reader;
 
-                    if (uidData) {
-                        // Redirect to green.html with UID in URL
-                        window.location.href = `green.html?uid=${uid}`;
-                    } else {
-                        // Redirect to red.html
-                        window.location.href = 'red.html';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching UID data:', error);
-                    document.body.innerHTML = '<p>Error loading UID data.</p>';
-                });
+      var abortController = new AbortController();
+
+      function bufferToString(b) {
+        var Int8Buffer = new Uint8Array(b);
+        var retVal = "";
+        for (var i = 0; i < Int8Buffer.length; ++i) {
+          retVal += " " + Int8Buffer[i].toString(16).padStart(2, "0");
         }
+        return retVal;
+      }
+
+      function setup() {
+        console.log("setup initiated...");
+        statusEl = document.getElementById("status");
+        output_el = document.getElementById("output");
+
+        if (!("NDEFReader" in window)) {
+          //This device doesn't have NFC capabilities.
+          statusEl.textContent =
+            "NFC is not supported on this device. Please use a different device.";
+          statusEl.style.color = "red";
+        }
+        reader = new NDEFReader();
+
+        reader.onreadingerror = (e) => {
+          console.error(e);
+          showOutput(false, e, "Error code # 1");
+        };
+        reader.onreading = (e) => {
+          const data = {
+            serialNumber: e.serialNumber ?? "NOT_FOUND",
+            body: e,
+          };
+          showOutput(
+            true,
+            data,
+            "Success. You will be redirected in 5 seconds"
+          );
+
+          setTimeout(() => {
+            handleVerification(data.serialNumber);
+          }, 5000);
+        };
+      }
+
+      function scanTag() {
+        console.log("scanning tag...");
+        statusEl.textContent = "Scanning for NFC tags...";
 
         // Check if a UID is passed via URL (simulate NFC scan)
         const params = new URLSearchParams(window.location.search);
-        const uidFromUrl = params.get('uid');
+        const uidFromUrl = params.get("uid");
 
         if (uidFromUrl) {
-            // If UID is provided in URL, handle the verification
-            document.getElementById('status').textContent = `Verifying UID: ${uidFromUrl}`;
-            handleVerification(uidFromUrl);
+          // If UID is provided in URL, handle the verification
+          document.getElementById(
+            "status"
+          ).textContent = `Verifying UID: ${uidFromUrl}`;
+          handleVerification(uidFromUrl);
         } else {
-            // If no UID in URL, attempt NFC scanning (original functionality)
-            if ('NFCReader' in window) {
-                const nfcReader = new NFCReader();
-                nfcReader.onreading = event => {
-                    const uid = event.serialNumber;
-                    handleVerification(uid);
-                };
-                nfcReader.onerror = () => {
-                    document.getElementById('status').textContent = 'Error reading NFC tag.';
-                };
-                nfcReader.start().catch(error => {
-                    document.getElementById('status').textContent = 'NFC reading failed. Please ensure NFC is enabled on your device.';
-                });
-            } else {
-                document.getElementById('status').textContent = 'NFC is not supported on this device. Please use a different device.';
-            }
+          reader
+            .scan({ signal: abortController.signal })
+            .then(() => {})
+            .catch((e) => {
+              console.error(e);
+
+              if (!e) {
+                return;
+              }
+              if (e.isError) showOutput(false, e, "Error # 2");
+              else {
+                if (e.reasonText) showOutput(false, e.reasonText, "Error # 3");
+              }
+            });
         }
+      }
+
+      function abortScan() {
+        abortController.abort({
+          isError: false,
+          reasonText: "user requested scan termination",
+        });
+      }
+
+      window.onload = () => {
+        setup();
+        setTimeout(() => {
+          scanTag();
+        }, 3000);
+      };
+
+      function showOutput(success, data, message) {
+        const response = {
+          success: success,
+          data: data,
+          message: message,
+        };
+
+        output_el.textContent = JSON.stringify(response, null, 2); // Display output
+      }
+
+      function handleVerification(uid) {
+        fetch("uids.json")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const uidData = data.validUIDs.find((item) => item.uid === uid);
+            if (uidData) {
+              // Redirect to green.html with UID in URL
+              window.location.href = `green.html?uid=${uid}`;
+            } else {
+              // Redirect to red.html
+              window.location.href = "red.html";
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching UID data:", error);
+            document.body.innerHTML = "<p>Error loading UID data.</p>";
+          });
+      }
     </script>
-</body>
+  </head>
+  <body>
+    <h1>NFC Verification Platform</h1>
+    <small>Version 2.4</small>
+
+    <p id="status">Scanning will start in 3 seconds...</p>
+    <div id="output"></div>
+    <div id="output-help-text">Output of the scanning will go here</div>
+
+    <script>
+      setTimeout(() => {
+        // Check if a UID is passed via URL (simulate NFC scan)
+        const params = new URLSearchParams(window.location.search);
+        const uidFromUrl = params.get("uid");
+
+        if (uidFromUrl) {
+          // If UID is provided in URL, handle the verification
+          statusEl.textContent = `Verifying UID: ${uidFromUrl}`;
+          handleVerification(uidFromUrl);
+        }
+      }, 2000);
+    </script>
+  </body>
 </html>
